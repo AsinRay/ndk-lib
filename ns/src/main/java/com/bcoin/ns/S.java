@@ -7,4 +7,5 @@ public class S {
 
 
     public native String stringFromJNI();
+    public native String decrypt(String s);
 }

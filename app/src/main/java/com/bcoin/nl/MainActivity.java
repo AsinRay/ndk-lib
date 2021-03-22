@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         S s = new S();
         Log.e("==========","");
         Log.e("本地方法测试:", s.stringFromJNI());
+        Log.e("本地方法测试:", s.decrypt("FFFFFFFFFFFFF333"));
     }
 
     /**
