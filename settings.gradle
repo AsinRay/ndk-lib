@@ -1,0 +1,3 @@
+include ':ns'
+include ':app'
+rootProject.name = "nl"
