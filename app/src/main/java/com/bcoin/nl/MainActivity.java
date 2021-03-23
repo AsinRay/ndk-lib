@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    String str = "国中123456789+-*/.abcdefghijklimnopqrstuvwxyz |\t\\~!@#$%^&*()_+}{}[];:'\"?,<>";
-
+    String payload = "国中123456789+-*/.abcdefghijklimnopqrstuvwxyz |\t\\~!@#$%^&*()_+}{}[];:'\"?,<>";
+    String payload2 = "asdf";
     @SuppressLint("LongLogTag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +32,16 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());
         S s = new S();
-        String rtn = s.flushT("这是一个有用的方法");
+        String rtn = s.flushT("6677");
         System.out.println(rtn);
+
         Log.e("==========",s.getStringX("admin"));
         Log.e("本地方法测试:", s.stringFromJNI());
         Log.e("本地方法decrypt测试:", s.decrypt("FFFFFFFFFFFFF333"));
-        Log.e("FFFFFFFFF本地方法s测试:", s.s(str));
-        Log.e("本地方法getStringX测试:", s.getStringX(""));
+        Log.e("FFFFFFFFF本地方法s测试:", s.s(payload2));
 
+        String ss = s.s("s");
+        Log.e("::s.s:",ss);
 
         Button btn = findViewById(R.id.button);
         btn.setText("Call Java Method");
@@ -48,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String str = s.getStringX("fuc_fuc");
-                Toast.makeText(getApplicationContext(),str,Toast.LENGTH_SHORT).show();
+                //String str = s.getStringX("fuc_fuc");
+                Toast.makeText(getApplicationContext(),ss,Toast.LENGTH_SHORT).show();
             }
         });
     }
