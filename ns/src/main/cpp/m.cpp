@@ -8,10 +8,9 @@ using namespace std;
 
 
 //将char类型转换成jstring类型
-jstring CStr2Jstring( JNIEnv* env, const char* pat )
-{
+jstring CStr2Jstring( JNIEnv* env, const char* pat ){
     // 定义java String类 strClass
-    jclass strClass = (env)->FindClass("Ljava/lang/String;");
+    jclass strClass = (env)->FindClass("java/lang/String");
     // 获取java String类方法String(byte[],String)的构造器,用于将本地byte[]数组转换为一个新String
     jmethodID ctorID = (env)->GetMethodID(strClass, "<init>", "([BLjava/lang/String;)V");
     // 建立byte数组
@@ -19,16 +18,16 @@ jstring CStr2Jstring( JNIEnv* env, const char* pat )
     // 将char* 转换为byte数组
     (env)->SetByteArrayRegion(bytes, 0, (jsize)strlen(pat), (jbyte*)pat);
     //设置String, 保存语言类型,用于byte数组转换至String时的参数
-    jstring encoding = (env)->NewStringUTF("GB2312");
+    jstring encoding = (env)->NewStringUTF("UTF-8");
     //将byte数组转换为java String,并输出
     return (jstring)(env)->NewObject(strClass, ctorID, bytes, encoding);
 
 }
-char * Jstring2CStr( JNIEnv * env, jstring jstr )
-{
+
+char * Jstring2CStr( JNIEnv * env, jstring jstr ){
     char * rtn = NULL;
     jclass clsstring = env->FindClass("java/lang/String");
-    jstring strencode = env->NewStringUTF("GB2312");
+    jstring strencode = env->NewStringUTF("UTF-8");
     jmethodID mid = env->GetMethodID(clsstring, "getBytes", "(Ljava/lang/String;)[B");
     jbyteArray barr= (jbyteArray)env->CallObjectMethod(jstr,mid,strencode);
     jsize alen = env->GetArrayLength(barr);
@@ -44,33 +43,33 @@ char * Jstring2CStr( JNIEnv * env, jstring jstr )
     return rtn;
 }
 
-extern "C"
-JNIEXPORT jintArray JNICALL
-Java_com_bcoin_ns_DataProvider_intMethod(JNIEnv *env, jobject thiz, jintArray i_num) {
-    // TODO: implement intMethod()
-}
-extern "C"
-JNIEXPORT jbyteArray JNICALL
-Java_com_bcoin_ns_DataProvider_byteMethod(JNIEnv *env, jobject thiz, jbyteArray i_byte) {
-    // TODO: implement byteMethod()
-}extern "C"
-JNIEXPORT jobject JNICALL
-Java_com_bcoin_ns_DataProvider_getStruct(JNIEnv *env, jobject thiz) {
-    // TODO: implement getStruct()
-}extern "C"
-JNIEXPORT jint JNICALL
-Java_com_bcoin_ns_DataProvider_add__II(JNIEnv *env, jobject thiz, jint x, jint y) {
-    // TODO: implement add()
-}extern "C"
-JNIEXPORT jint JNICALL
-Java_com_bcoin_ns_DataProvider_sub(JNIEnv *env, jclass clazz, jint x, jint y) {
-    // TODO: implement sub()
-}extern "C"
-JNIEXPORT jchar JNICALL
-Java_com_bcoin_ns_DataProvider_add__CC(JNIEnv *env, jobject thiz, jchar x, jchar y) {
-    // TODO: implement add()
-}extern "C"
-JNIEXPORT jstring JNICALL
-Java_com_bcoin_ns_DataProvider_sayHelloInC(JNIEnv *env, jobject thiz, jstring s) {
-    // TODO: implement sayHelloInC()
-}
+//extern "C"
+//JNIEXPORT jintArray JNICALL
+//Java_com_bcoin_ns_DataProvider_intMethod(JNIEnv *env, jobject thiz, jintArray i_num) {
+//    // TODO: implement intMethod()
+//}
+//extern "C"
+//JNIEXPORT jbyteArray JNICALL
+//Java_com_bcoin_ns_DataProvider_byteMethod(JNIEnv *env, jobject thiz, jbyteArray i_byte) {
+//    // TODO: implement byteMethod()
+//}extern "C"
+//JNIEXPORT jobject JNICALL
+//Java_com_bcoin_ns_DataProvider_getStruct(JNIEnv *env, jobject thiz) {
+//    // TODO: implement getStruct()
+//}extern "C"
+//JNIEXPORT jint JNICALL
+//Java_com_bcoin_ns_DataProvider_add__II(JNIEnv *env, jobject thiz, jint x, jint y) {
+//    // TODO: implement add()
+//}extern "C"
+//JNIEXPORT jint JNICALL
+//Java_com_bcoin_ns_DataProvider_sub(JNIEnv *env, jclass clazz, jint x, jint y) {
+//    // TODO: implement sub()
+//}extern "C"
+//JNIEXPORT jchar JNICALL
+//Java_com_bcoin_ns_DataProvider_add__CC(JNIEnv *env, jobject thiz, jchar x, jchar y) {
+//    // TODO: implement add()
+//}extern "C"
+//JNIEXPORT jstring JNICALL
+//Java_com_bcoin_ns_DataProvider_sayHelloInC(JNIEnv *env, jobject thiz, jstring s) {
+//    // TODO: implement sayHelloInC()
+//}

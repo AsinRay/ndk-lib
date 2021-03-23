@@ -1,5 +1,6 @@
 #include <jni.h>
 #include <string>
+#include "md5.h"
 
 using namespace std;
 
@@ -7,7 +8,7 @@ extern "C" JNIEXPORT jstring JNICALL
 Java_com_bcoin_ns_S_stringFromJNI(
         JNIEnv* env,
         jobject /* this */) {
-    std::string hello = "Hello from C++, Native so by Alex Lio";
+    string hello = "Hello from C++, Native so by Alex Lio";
     return env->NewStringUTF(hello.c_str());
 }
 
@@ -17,7 +18,7 @@ JNIEXPORT jstring JNICALL
 Java_com_bcoin_ns_S_decrypt(JNIEnv *env, jobject thiz, jstring s) {
 
     // TODO: implement decrypt()
-
+    int values[] {1,2,3};
     const char* params = env->GetStringUTFChars(s,0);
     string sign_str(params);
     sign_str.insert(0,"asdfasdf");
@@ -25,3 +26,5 @@ Java_com_bcoin_ns_S_decrypt(JNIEnv *env, jobject thiz, jstring s) {
     env->ReleaseStringUTFChars(s,params);
     return env->NewStringUTF(sign_str.c_str());
 }
+
+
