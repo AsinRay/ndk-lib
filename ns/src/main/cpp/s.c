@@ -62,12 +62,13 @@ Java_com_bcoin_ns_S_s(JNIEnv *env, jobject thiz, jstring s) {
     return (*env)->NewStringUTF(env, szMd5);
 }
 
-static jstring token = NULL;
+// global jstring token
+jstring token;
 
 JNIEXPORT jstring JNICALL
 Java_com_bcoin_ns_S_getStringX(JNIEnv *env, jobject thiz, jstring s) {
-    char* ch = getToken(env);
-    //char* ch = (*env)->GetStringUTFChars(env, token,JNI_FALSE);
+    //char* ch = getToken(env);
+    char* ch = (*env)->GetStringUTFChars(env, token,JNI_FALSE);
     return (*env)->NewStringUTF(env, ch);
 }
 
@@ -77,6 +78,11 @@ JNIEXPORT jstring JNICALL
 Java_com_bcoin_ns_S_flushT(JNIEnv *env, jobject thiz, jstring s) {
     const char* params = (*env)->GetStringUTFChars(env,s,0);
     // TODO: implement flushT()
-    token = s;
+
+    //创建全局对象
+    token = (*env)->NewGlobalRef(env, s);
+
+    //删除全局变量
+    //(*env)->DeleteGlobalRef(env, token);
     return token;
 }
