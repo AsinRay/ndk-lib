@@ -1,1 +1,11 @@
+# NDK arr
+
+
+## 在其它工程中使用arr
+新建其他Android工程，然后我们直接将上文生成的 ndk-nl-release.aar包拷贝到新工程app module的libs目录下，然后更改app module下的build.gradle文件，添加对该aar包的依赖：
+
+dependencies {
+	implementation files('libs/ndk-nl-release.aar')
+}
+
 https://blog.csdn.net/u010976213/article/details/105704424
