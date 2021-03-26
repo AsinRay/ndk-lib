@@ -4,7 +4,14 @@
 #include "b64.h"
 #include "AES.h"
 
+
 using namespace std;
+
+
+extern "C" {
+    char* getKey();
+    char* getIv();
+}
 
 //把字符串转成十六进制字符串
 std::string char2hex(std::string s)
@@ -118,7 +125,7 @@ string encryptByAES(const char * data, const char* secretKey, const char* iv, in
 }
 
 /**
- * cbc方式解密
+ * 解密
  * @param data
  * @param secretKey
  * @param iv
@@ -162,8 +169,17 @@ string decryptByAES(const char * data, const char* secretKey, const char* iv, in
     return strDest;
 }
 
-
-
+/**
+ * cbc方式解密
+ *
+ * @param data
+ * @param secretKey
+ * @param iv
+ * @return
+ */
+string decryptAESCBC(const char * data) {
+    return decryptByAES(data, getKey(),  getIv(), 1);
+}
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_bcoin_ns_S_stringFromJNI(
@@ -176,7 +192,7 @@ Java_com_bcoin_ns_S_stringFromJNI(
 }
 
 /**
- * AES/CBC/PKCS5Padding decrypt
+ * AES/CBC/PKCS7Padding decrypt
  * @param env
  * @param thiz
  * @param s
@@ -188,9 +204,33 @@ Java_com_bcoin_ns_S_d(JNIEnv *env, jobject thiz, jstring s) {
     if (s == NULL) {
         return NULL;
     }
-    //return decrypt(env,s);
-    return NULL;
+    const char* b64 = env->GetStringUTFChars(s, 0);
+    string ss = decryptAESCBC(b64);
+    env->ReleaseStringUTFChars(s, b64);
+    return env->NewStringUTF(ss.c_str());
 }
+
+//extern "C"
+//JNIEXPORT jstring JNICALL
+//Java_com_bcoin_ns_S_test(JNIEnv *env, jobject thiz, jstring s) {
+//    // TODO: implement test()
+//
+//    char* ch = env->GetStringUTFChars(token,JNI_FALSE);
+//    int data_len = strlen(ch);
+//    //char *rtn = base64_encode(ch,data_len);
+//    //(*env)->ReleaseStringUTFChars(env, s, ch);
+//
+//    char * xx = "Y68Ejv8jGeMObwKrPsptBESSLxW9rc7x/Vrhl8DV66Z9rVQH+TogNTZSV8aFvcDZP6/gzYb9/9qrIY8MsdDQxQ==";
+//
+//    //return decrypt(env,xx);
+//    //size_t  len = strlen(xx);
+//    //char* rxx = base64_decode(xx,len);
+//
+//    char  chx[]  = {"Hello from C, Native so by Alex Lio"};
+//    return env->NewStringUTF(ch.c_str());
+//}
+
+
 
 
 

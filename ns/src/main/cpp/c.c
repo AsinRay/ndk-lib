@@ -3,7 +3,6 @@
 #include "b64.h"
 #include "c.h"
 
-
 // global jstring token
 jstring token;
 
@@ -15,68 +14,84 @@ jstring token;
 char* getToken(JNIEnv* env){
     //找到class对象
     jclass ndkdemo_clazz = (*env)->FindClass(env, "com/bcoin/app/Cache");
-
     char* method_name = "<init>";
     char* method_sign = "()V";
     //构造方法
     jmethodID constructor_method_id = (*env)->GetMethodID(env, ndkdemo_clazz, method_name, method_sign);
-
     //创建对象
     jobject jobj = (*env)->NewObject(env, ndkdemo_clazz, constructor_method_id);
-
     //得到获取getToken的方法的id
     jmethodID methodid = (*env)->GetMethodID(env,ndkdemo_clazz,"getToken","()Ljava/lang/String;");
-
     //调用获取getToken的方法
     jstring token = (*env)->CallObjectMethod(env,jobj,methodid);
-
     //将jstring转换为char*类型
     const char* c_token =(char*) (*env)->GetStringUTFChars(env, token,JNI_FALSE);
-
     //打印token
     //printf("token = %s",c_token);
-
     //删除对象(关键代码)
     (*env)->DeleteLocalRef(env,jobj);
     return c_token;
 }
+
+
+
+
 /**
  * C的字节数组转为jstring
- * @param envPtr
- * @param src
+ * @param env
+ * @param pat
  * @return
  */
-/*jstring charToJstring(JNIEnv *env, char *src) {
-    jsize len = strlen(src);
-    // 定义java String类 strClass
-    jclass jClz = (*env)->FindClass(env, "java/lang/String");
-    // 获取java String类方法String(byte[],String)的构造器,用于将本地byte[]数组转换为一个新String
-    jmethodID ctorId = (*env)->GetMethodID(env, jClz, "<init>", "([BLjava/lang/String;)V");
-    // 建立byte数组
-    jbyteArray jbArr = (*env)->NewByteArray(env, len);
-    // 将char* 转换为byte数组
-    (*env)->SetByteArrayRegion(env, jbArr, 0, len, (jbyte*) src);
-    //设置String, 保存语言类型,用于byte数组转换至String时的参数
-    jstring encoding = (*env)->NewStringUTF(env, "UTF-8");
-    //将byte数组转换为java String,并输出
-    return (jstring) (*env)->NewObject(env, jClz, ctorId, jbArr, encoding);
-}*/
-
 jstring charToJstring(JNIEnv *env, const char *pat) {
+    // Java String类 strClass
     jclass strClass = (*env)->FindClass(env, "java/lang/String");
+    // 获取java String类方法String(byte[],String)的构造器,用于将本地byte[]数组转换为一个新String
     jmethodID ctorID = (*env)->GetMethodID(env, strClass, "<init>","([BLjava/lang/String;)V");
+    // 建立byte数组
     jbyteArray bytes = (*env)->NewByteArray(env, strlen(pat));
+    // 将char* 转换为byte数组
     (*env)->SetByteArrayRegion(env, bytes, 0, strlen(pat), (jbyte *) pat);
+    //设置String的encoding, 保存语言类型,用于byte数组转换至String时的参数
     jstring encoding = (*env)->NewStringUTF(env, "utf-8");
+    //将byte数组转换为java String,并输出
     return (jstring) (*env)->NewObject(env, strClass, ctorID, bytes, encoding);
 }
 
-char* decode(const char* ch){
-char* out = (char*) malloc(Base64decode_len(ch));
-size_t actualSize = Base64decode(out, ch);
-return out;
+char *jstringToChar(JNIEnv *env, jstring jstr) {
+    char *rtn = NULL;
+    jclass clsstring = (*env)->FindClass(env, "java/lang/String");
+    jstring strencode = (*env)->NewStringUTF(env, "utf-8");
+    jmethodID mid = (*env)->GetMethodID(env, clsstring, "getBytes", "(Ljava/lang/String;)[B");
+    jbyteArray barr = (jbyteArray) (*env)->CallObjectMethod(env, jstr, mid, strencode);
+    jsize alen = (*env)->GetArrayLength(env, barr);
+    jbyte *ba = (*env)->GetByteArrayElements(env, barr, JNI_FALSE);
+    if (alen > 0) {
+        rtn = (char *) malloc(alen + 1);
+        memcpy(rtn, ba, alen);
+        rtn[alen] = 0;
+    }
+    (*env)->ReleaseByteArrayElements(env, barr, ba, 0);
+    return rtn;
 }
 
+
+char k[16]="0123456789abcdef";
+char iv[16]="0123456789abcdef";
+
+char* getKey(){
+    return k;
+}
+
+char* getIv(){
+    return iv;
+}
+
+/**
+ * concat tow char array byte by byte.
+ * @param s1
+ * @param s2
+ * @return
+ */
 char* join(char *s1, char *s2){
     // need free
     char *result = (char *) malloc(strlen(s1)+strlen(s2));
@@ -86,9 +101,6 @@ char* join(char *s1, char *s2){
     strcat(result, s2);
     return result;
 }
-
-
-
 
 /**
  * md5 with salt
@@ -127,8 +139,6 @@ Java_com_bcoin_ns_S_s(JNIEnv *env, jobject thiz, jstring s) {
 }
 
 
-
-
 JNIEXPORT jstring JNICALL
 Java_com_bcoin_ns_S_getStringX(JNIEnv *env, jobject thiz, jstring s) {
     //char* ch = getToken(env);
@@ -138,7 +148,13 @@ Java_com_bcoin_ns_S_getStringX(JNIEnv *env, jobject thiz, jstring s) {
 }
 
 
-// flush Token when user modified the username or password.
+/**
+ * Flash token when user modified the username or password.
+ * @param env
+ * @param thiz
+ * @param s
+ * @return
+ */
 JNIEXPORT jstring JNICALL
 Java_com_bcoin_ns_S_flushT(JNIEnv *env, jobject thiz, jstring s) {
     //const char* params = (*env)->GetStringUTFChars(env,s,0);
@@ -150,23 +166,35 @@ Java_com_bcoin_ns_S_flushT(JNIEnv *env, jobject thiz, jstring s) {
     return token;
 }
 
+
+
+/**
+ * 测试工具的正确性
+ * @param env
+ * @param thiz
+ * @param s
+ * @return
+ */
 JNIEXPORT jstring JNICALL
 Java_com_bcoin_ns_S_test(JNIEnv *env, jobject thiz, jstring s) {
     // TODO: implement test()
 
-    char* ch = (*env)->GetStringUTFChars(env, token,JNI_FALSE);
-    int data_len = strlen(ch);
+    char* c = jstringToChar(env,s);
+    return charToJstring(env,c);
+
+    //char* ch = (*env)->GetStringUTFChars(env, token,JNI_FALSE);
+    //int data_len = strlen(ch);
     //char *rtn = base64_encode(ch,data_len);
     //(*env)->ReleaseStringUTFChars(env, s, ch);
 
-    char * xx = "Y68Ejv8jGeMObwKrPsptBESSLxW9rc7x/Vrhl8DV66Z9rVQH+TogNTZSV8aFvcDZP6/gzYb9/9qrIY8MsdDQxQ==";
+    //char * xx = "Y68Ejv8jGeMObwKrPsptBESSLxW9rc7x/Vrhl8DV66Z9rVQH+TogNTZSV8aFvcDZP6/gzYb9/9qrIY8MsdDQxQ==";
 
     //return decrypt(env,xx);
     //size_t  len = strlen(xx);
     //char* rxx = base64_decode(xx,len);
 
-    char  chx[]  = {"Hello from C, Native so by Alex Lio"};
-    return (*env)->NewStringUTF(env, chx);
+    //char  chx[]  = {"Hello from C, Native so by Alex Lio"};
+    //return (*env)->NewStringUTF(env, chx);
 }
 
 

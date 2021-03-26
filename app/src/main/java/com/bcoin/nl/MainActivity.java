@@ -58,12 +58,17 @@ public class MainActivity extends AppCompatActivity {
                 //Log.e("token is:",ss);
                 //ss = s.test("YXNkZ我是中国人AAA");
                 //Log.e("decrypt:",ss);
-                String ss = s.stringFromJNI();
-                Log.e("base %s:",ss);
-                ss = s.test("asdfasd");
-                Log.e("test %s:",ss);
+//                String ss = s.stringFromJNI();
+//                Log.e("base %s:",ss);
+//                ss = s.test("asdfasd");
+//                Log.e("test %s:",ss);
+
+                String ss = s.d("ArOWzhJQixRhadJz+0JHAvLri1+XbiDLjRYUlkvOZxVDF8MvLmSkn48Yq0Y5Q9CcFs02oVtayo8qdvUI5ov4mXPlcGI+jpQl8aI43dJ7rqo=");
+                Log.e("d:%s:", ss);
                 //String str = s.getStringX("fuc_fuc");
-                //Toast.makeText(getApplicationContext(),ss,Toast.LENGTH_SHORT).show();
+                //ss = s.test("我是中国人");
+                //Log.e("test:%s:",ss);
+                Toast.makeText(getApplicationContext(),ss,Toast.LENGTH_SHORT).show();
             }
         });
     }
