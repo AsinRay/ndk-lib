@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
                 //Log.e("decrypt:",ss);
                 String ss = s.stringFromJNI();
                 Log.e("base %s:",ss);
+                ss = s.test("asdfasd");
+                Log.e("test %s:",ss);
                 //String str = s.getStringX("fuc_fuc");
                 //Toast.makeText(getApplicationContext(),ss,Toast.LENGTH_SHORT).show();
             }

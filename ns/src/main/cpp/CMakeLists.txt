@@ -27,7 +27,7 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-             ns.cpp md5.c c.c b64.h)
+            c.c md5.c ns.cpp AES.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
