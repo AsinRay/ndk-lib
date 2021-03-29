@@ -14,4 +14,14 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void testMMD5() {
+        S s = new S();
+        String token = "0123456789.~!@#$%^&*()_+}{我们一起来";
+        s.flushT(token);
+        String md5 = s.s("p这是一个Json String.");
+        String exp = "DBBB883861C778C2AC9A66AB1C0CEEAA";
+        assertEquals(exp,md5);
+    }
 }

@@ -33,7 +33,7 @@ public class S {
 
 
 
-    public static native void releaseJNIRes();
+    public static native boolean releaseJNIRes();
     public native String stringFromJNI();
     public native String test(String s);
     public native String getStringX(String s);

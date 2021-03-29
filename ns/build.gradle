@@ -41,6 +41,23 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+//    testOptions {
+//        unitTests {
+//            all {
+//                // This is where we have access to the properties of gradle's Test class,
+//                // look it  up if you want to customize more test parameters
+//
+//                // next we take our cmake output dir for whatever architecture
+//                // you can also put some 3rd party libs here, or override
+//                // the implicitly linked stuff (libc, libm and others)
+//
+//                def libpath = '' + projectDir + '/build/intermediates/cmake/debug/obj/x86_64/'
+//                //+':/home/developer/my-project/some-sdk/lib'
+//
+//                environment 'LD_LIBRARY_PATH', libpath
+//            }
+//        }
+//    }
 }
 
 dependencies {

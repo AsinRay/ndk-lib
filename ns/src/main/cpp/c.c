@@ -6,6 +6,8 @@
 // global jstring token
 jstring token;
 
+unsigned char tk[16] = {0};
+
 /**
  * 从com.bcoin.app.Cache类的getToken方法中取出当前调用的token
  * @param env   当前的env
@@ -79,11 +81,11 @@ char k[16]="0123456789abcdef";
 char iv[16]="0123456789abcdef";
 
 char* getKey(){
-    return k;
+    return tk;
 }
 
 char* getIv(){
-    return iv;
+    return tk;
 }
 
 /**
@@ -103,6 +105,7 @@ char* join(char *s1, char *s2){
 }
 
 /**
+ * Gen md5 hex string or given string, which appended by the user's token.
  * md5 with salt
  * @param env
  * @param thiz
@@ -149,6 +152,7 @@ Java_com_bcoin_ns_S_getStringX(JNIEnv *env, jobject thiz, jstring s) {
 
 
 /**
+ *
  * Flash token when user modified the username or password.
  * @param env
  * @param thiz
@@ -157,12 +161,22 @@ Java_com_bcoin_ns_S_getStringX(JNIEnv *env, jobject thiz, jstring s) {
  */
 JNIEXPORT jstring JNICALL
 Java_com_bcoin_ns_S_flushT(JNIEnv *env, jobject thiz, jstring s) {
-    //const char* params = (*env)->GetStringUTFChars(env,s,0);
+    //const char* ch = (*env)->GetStringUTFChars(env,s,0);
     // TODO: implement flushT()
+
+    (*env)->DeleteGlobalRef(env, token);
     //创建全局对象
     token = (*env)->NewGlobalRef(env, s);
     //删除全局变量
     //(*env)->DeleteGlobalRef(env, token);
+
+
+    char* ch = (*env)->GetStringUTFChars(env, s, JNI_FALSE);
+    MD5_CTX context = {0};
+    MD5Init(&context);
+    MD5Update(&context, ch, strlen(ch));
+    //unsigned char dest[16] = {0};
+    MD5Final(tk, &context);
     return token;
 }
 
@@ -203,9 +217,10 @@ Java_com_bcoin_ns_S_test(JNIEnv *env, jobject thiz, jstring s) {
  * @param env
  * @param thiz
  */
-JNIEXPORT void JNICALL
+JNIEXPORT jboolean JNICALL
 Java_com_bcoin_ns_S_releaseJNIRes(JNIEnv *env, jobject thiz) {
     // TODO: implement releaseJNIRes()
     //删除全局变量
     (*env)->DeleteGlobalRef(env, token);
+    return JNI_TRUE;
 }
