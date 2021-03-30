@@ -132,7 +132,9 @@ string encryptByAES(const char * data, const char* secretKey, const char* iv, in
  * @return
  */
 string decryptByAES(const char * data, const char* secretKey, const char* iv, int iMode) {
+    // Get the string of base64
     string data_str(data);
+
     string strData = b64decode(data_str);
     size_t length = strData.length();
     //密文
