@@ -1,6 +1,5 @@
 //
 // Created by boot on 3/24/21.
-// https://opensource.apple.com/source/QuickTimeStreamingServer/QuickTimeStreamingServer-452/CommonUtilitiesLib/base64.c
 //
 
 /*
@@ -8,7 +7,6 @@
  */
 
 #include <string.h>
-
 
 /* aaaack but it's fast and const should make it shared text page. */
 static const unsigned char pr2six[256] =
