@@ -7,9 +7,6 @@
 #include <string>
 
 using namespace std;
-string encryptByAES(const char* data, const char* secretKey, const char* iv, int iMode);
 string decryptByAES(const char* data, const char* secretKey, const char* iv, int iMode);
-string decryptAES_CBC(const char* data, const char* secretKey, const char* iv);
-int getModeByName(const char * iModeName);
 
 #endif //NL_NS_H

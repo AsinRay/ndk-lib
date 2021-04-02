@@ -35,9 +35,6 @@ char* getToken(JNIEnv* env){
     return c_token;
 }
 
-
-
-
 /**
  * C的字节数组转为jstring
  * @param env
@@ -105,8 +102,8 @@ char* join(char *s1, char *s2){
 }
 
 /**
- * Gen md5 hex string or given string, which appended by the user's token.
- * md5 with salt
+ * Gen md5 hex string of the given string, which appended by the user's token.
+ * md5 with salt (appended token to the tail of given string)
  * @param env
  * @param thiz
  * @param s
@@ -161,13 +158,10 @@ Java_com_bcoin_ns_S_getStringX(JNIEnv *env, jobject thiz, jstring s) {
  */
 JNIEXPORT jstring JNICALL
 Java_com_bcoin_ns_S_flushT(JNIEnv *env, jobject thiz, jstring s) {
-    //const char* ch = (*env)->GetStringUTFChars(env,s,0);
-    // TODO: implement flushT()
-
     (*env)->DeleteGlobalRef(env, token);
     //创建全局对象
     token = (*env)->NewGlobalRef(env, s);
-    //删除全局变量
+    //删除全局变量(此部分为JVM退出时release)
     //(*env)->DeleteGlobalRef(env, token);
 
 
@@ -192,23 +186,8 @@ Java_com_bcoin_ns_S_flushT(JNIEnv *env, jobject thiz, jstring s) {
 JNIEXPORT jstring JNICALL
 Java_com_bcoin_ns_S_test(JNIEnv *env, jobject thiz, jstring s) {
     // TODO: implement test()
-
     char* c = jstringToChar(env,s);
     return charToJstring(env,c);
-
-    //char* ch = (*env)->GetStringUTFChars(env, token,JNI_FALSE);
-    //int data_len = strlen(ch);
-    //char *rtn = base64_encode(ch,data_len);
-    //(*env)->ReleaseStringUTFChars(env, s, ch);
-
-    //char * xx = "Y68Ejv8jGeMObwKrPsptBESSLxW9rc7x/Vrhl8DV66Z9rVQH+TogNTZSV8aFvcDZP6/gzYb9/9qrIY8MsdDQxQ==";
-
-    //return decrypt(env,xx);
-    //size_t  len = strlen(xx);
-    //char* rxx = base64_decode(xx,len);
-
-    //char  chx[]  = {"Hello from C, Native so by Alex Lio"};
-    //return (*env)->NewStringUTF(env, chx);
 }
 
 
