@@ -29,7 +29,14 @@ public class S {
      *
      * @param s token to be flush.
      */
-    public native String flushT(String s);
+    public native String ft(String s);
+
+    /**
+     * Get token
+     * @param s
+     * @return
+     */
+    public native String gt(String s);
 
     public static native boolean releaseJNIRes();
 
@@ -39,5 +46,6 @@ public class S {
      */
     public native String stringFromJNI();
     public native String test(String s);
-    public native String getStringX(String s);
+
+
 }
