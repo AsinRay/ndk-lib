@@ -150,6 +150,26 @@ Java_com_bcoin_ns_S_getStringX(JNIEnv *env, jobject thiz, jstring s) {
     return (*env)->NewStringUTF(env, ch);
 }
 
+/**
+ * Concat the given String
+ * @param env
+ * @param obj
+ * @param string
+ * @return
+ */
+JNIEXPORT jstring JNICALL Java_com_bcoin_ns_S_concat(JNIEnv *env, jobject obj, jstring string)
+{
+    const char *name = (*env)->GetStringUTFChars(env,string, NULL);
+    char msg[60] = "Hello ";
+    jstring result;
+
+    strcat(msg, name);
+    (*env)->ReleaseStringUTFChars(env,string, name);
+    puts(msg);
+    result = (*env)->NewStringUTF(env,msg);
+    return result;
+}
+
 
 /**
  *
