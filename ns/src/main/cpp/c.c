@@ -140,11 +140,14 @@ Java_com_bcoin_ns_S_s(JNIEnv *env, jobject thiz, jstring s) {
 
 
 JNIEXPORT jstring JNICALL
-Java_com_bcoin_ns_S_getStringX(JNIEnv *env, jobject thiz, jstring s) {
+Java_com_bcoin_ns_S_gt(JNIEnv *env, jobject thiz, jstring s) {
     //char* ch = getToken(env);
-    char* ch = (*env)->GetStringUTFChars(env, token,JNI_FALSE);
-    //(*env)->ReleaseStringUTFChars(env, ch, s);
-    return (*env)->NewStringUTF(env, ch);
+    if(NULL != token){
+        char* ch = (*env)->GetStringUTFChars(env, token,JNI_FALSE);
+        //(*env)->ReleaseStringUTFChars(env, ch, s);
+        return (*env)->NewStringUTF(env, ch);
+    }
+    return NULL;
 }
 
 
@@ -157,7 +160,7 @@ Java_com_bcoin_ns_S_getStringX(JNIEnv *env, jobject thiz, jstring s) {
  * @return
  */
 JNIEXPORT jstring JNICALL
-Java_com_bcoin_ns_S_flushT(JNIEnv *env, jobject thiz, jstring s) {
+Java_com_bcoin_ns_S_ft(JNIEnv *env, jobject thiz, jstring s) {
     (*env)->DeleteGlobalRef(env, token);
     //创建全局对象
     token = (*env)->NewGlobalRef(env, s);
