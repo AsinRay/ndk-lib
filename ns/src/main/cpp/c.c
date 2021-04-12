@@ -129,12 +129,14 @@ Java_com_bcoin_ns_S_s(JNIEnv *env, jobject thiz, jstring s) {
     payload = NULL;
 
     int i = 0;
-    char szMd5[32] = {0};
+    //char szMd5[32] = {0};
+    // C end of string /0
+    char szMd5[33] = {0};
 
     for (i = 0; i < 16; i++) {
         sprintf(szMd5, "%s%02x", szMd5, dest[i]);
     }
-    LOGI("%s", szMd5);
+    LOGD("%s", szMd5);
     return (*env)->NewStringUTF(env, szMd5);
 }
 
