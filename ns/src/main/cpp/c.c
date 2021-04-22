@@ -1,4 +1,4 @@
-#include "includes.h"
+#include "nc.h"
 #include "md5.h"
 #include "b64.h"
 #include "c.h"
@@ -101,6 +101,17 @@ char* join(char *s1, char *s2){
     return result;
 }
 
+char* xor(char *s){
+    int len = strlen(s);
+    s[0] = s[0]^len;
+    for(int i = 1 ; i<strlen(s); i++){
+        s[i] = s[i-1]^s[i];
+    }
+    //LOGD("origin: %s, token %s",s1,token);
+    LOGD("xor: %s",s);
+    return s;
+}
+
 /**
  * Gen md5 hex string of the given string, which appended by the user's token.
  * md5 with salt (appended token to the tail of given string)
@@ -114,6 +125,9 @@ Java_com_bcoin_ns_S_s(JNIEnv *env, jobject thiz, jstring s) {
     //char* szText = (char *) (*env)->GetStringUTFChars(env, s, 0);
     char* szText = (*env)->GetStringUTFChars(env, s, JNI_FALSE);
     char* tk =     (*env)->GetStringUTFChars(env, token,JNI_FALSE);
+    if(szText == NULL || tk == NULL)
+        return NULL;
+
     char *payload = join(szText,tk);
 
     MD5_CTX context = {0};
